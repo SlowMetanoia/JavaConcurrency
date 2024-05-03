@@ -109,7 +109,7 @@ public class ReadersWritersSolution {
             write.lock();
 
             //Эмулируем операцию
-            System.out.println("Writer " + writerNumber + " has started writing" + this);
+            System.out.println("Writer " + writerNumber + " has started writing " + this);
             try { Thread.sleep(r.nextInt(randomTimeoutUpperBound) + timeout); } catch (InterruptedException e) { e.printStackTrace(); }
             System.out.println("Writer " + writerNumber + " has ended writing");
 

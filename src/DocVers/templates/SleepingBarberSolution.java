@@ -2,7 +2,7 @@ package DocVers.templates;
 
 import java.util.Vector;
 
-public class SleepingBarber {
+public class SleepingBarberSolution {
 
     public static final int WORK_DELAY = 1000;
     public static final int CLIENTS_DELAY = 5000;
@@ -16,14 +16,14 @@ public class SleepingBarber {
             new Thread(barber).start();
         }
 
-        public void addClient(Client client){
+        public synchronized void addClient(Client client){
             clients.add(client);
         }
-        public boolean hasClients(){
+        public synchronized boolean hasClients(){
             return !clients.isEmpty();
         }
 
-        public void doBarberWork(){
+        public synchronized void doBarberWork(){
             while (hasClients()){
                 Client client = clients.get(0);
                 System.out.println("Barber is shaving");
@@ -39,9 +39,12 @@ public class SleepingBarber {
             try { wait(); } catch (InterruptedException e) { e.printStackTrace(); }
         }
 
-        public void clientArrived(Client client){
+        public synchronized void clientArrived(Client client){
             if(hasClients()) addClient(client);
-            else notify();
+            else {
+                addClient(client);
+                notify();
+            }
         }
     }
 
@@ -82,7 +85,7 @@ public class SleepingBarber {
         @Override
         public void run() {
             while (true){
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 3; i++) {
                     new Thread(new Client(barbershop)).start();
                 }
                 try {
@@ -96,6 +99,6 @@ public class SleepingBarber {
 
     public static void main(String[] args) {
         Barbershop barbershop = new Barbershop();
-        ClientProducer clientProducer = new ClientProducer(barbershop);
+        new Thread(new ClientProducer(barbershop)).start();
     }
 }
