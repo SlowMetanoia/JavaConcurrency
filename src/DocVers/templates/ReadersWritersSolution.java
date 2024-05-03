@@ -1,11 +1,14 @@
 package DocVers.templates;
 
+import DocVers.synchronization.SimpleLock;
+
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.StampedLock;
 
 public class ReadersWritersSolution {
+
     final public static Random r = new Random();
     final public static int timeout = 100;
     final public static int randomTimeoutUpperBound = 900;
@@ -56,10 +59,10 @@ public class ReadersWritersSolution {
         volatile int currentReaders = 0;
         volatile int currentWriters = 0;
 
-        Lock read = new ReentrantLock();
-        Lock write = new ReentrantLock();
-        Lock readCount = new ReentrantLock();
-        Lock writeCount = new ReentrantLock();
+        SimpleLock read = new SimpleLock();
+        SimpleLock write = new SimpleLock();
+        SimpleLock readCount = new SimpleLock();
+        SimpleLock writeCount = new SimpleLock();
 
         @Override
         public String toString() {
